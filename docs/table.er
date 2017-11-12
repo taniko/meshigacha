@@ -1,0 +1,58 @@
+title {label: "Entity-Relationship diagram", size: "20"}
+
+[restaurants]
+    *id
+    name
+    address
+    phone
+    email
+
+[foods]
+    *id
+    name
+    calorie
+    red
+    green
+    yellow
+
+[food_restaurant]
+    *id
+    restaurant_id
+    food_id
+    price
+
+[allergies]
+    *id
+    name
+
+[allergy_food]
+    *id
+    allergy_id
+    food_id
+
+[categories]
+    *id
+    name
+
+[category_food]
+    *id
+    category_id
+    food_id
+
+[foodstuffs]
+    *id
+    name
+
+[food_foodstuff]
+    *id
+    food_id
+    foodstuff_id
+
+food_restaurant *--* restaurants
+food_restaurant *--* foods
+allergy_food *--* allergies
+allergy_food *--* foods
+category_food 1--* foods
+category_food *--1 categories
+food_foodstuff *--* foods
+food_foodstuff *--* foodstuffs
