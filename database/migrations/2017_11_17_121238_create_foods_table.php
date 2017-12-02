@@ -15,12 +15,17 @@ class CreateFoodsTable extends Migration
     {
         Schema::create('foods', function (Blueprint $table) {
             $table->increments('id');
+            $table->timestamps();
             $table->string('name');
             $table->float('calorie')->unsigned();
             $table->float('red')->unsigned();
             $table->float('green')->unsigned();
             $table->float('yellow')->unsigned();
-            $table->timestamps();
+            $table->integer('restaurant_id')->unsigned();
+
+            $table->foreign('restaurant_id')
+                ->references('id')->on('restaurants')
+                ->onDelete('cascade');
         });
     }
 
@@ -31,6 +36,9 @@ class CreateFoodsTable extends Migration
      */
     public function down()
     {
+        Schema::table('foods', function (Blueprint $table) {
+            $table->dropForeign('foods_restaurant_id_foreign');
+        });
         Schema::dropIfExists('foods');
     }
 }

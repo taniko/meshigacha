@@ -21,6 +21,7 @@ class CreateRestaurantsTable extends Migration
             $table->string('phone');
             $table->timestamps();
         });
+        //2017_11_17_120317
     }
 
     /**
