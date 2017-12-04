@@ -14,11 +14,7 @@ title {label: "Entity-Relationship diagram", size: "20"}
     red
     green
     yellow
-
-[food_restaurant]
-    *id
     restaurant_id
-    food_id
     price
 
 [allergies]
@@ -48,8 +44,7 @@ title {label: "Entity-Relationship diagram", size: "20"}
     food_id
     foodstuff_id
 
-food_restaurant *--* restaurants
-food_restaurant *--* foods
+foods *--1 restaurants
 allergy_food *--* allergies
 allergy_food *--* foods
 category_food 1--* foods
