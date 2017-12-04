@@ -37,4 +37,15 @@ class FoodTest extends TestCase
         $response = $this->api('POST', "restaurants/{$restaurant->id}/foods", $data);
         $response->assertStatus(200);
     }
+
+    public function testCreateWithAllergies()
+    {
+        $restaurant = $this->createRestaurant();
+        $data = factory(Food::class)->make()->toArray();
+        $data['allergies'] = $this->faker()->words(3);
+        $response = $this->api('POST', "restaurants/{$restaurant->id}/foods", $data);
+        $response->assertStatus(200);
+        $food = Food::orderBy('id', 'desc')->first();
+        $this->assertEquals(3, $food->allergies()->count());
+    }
 }

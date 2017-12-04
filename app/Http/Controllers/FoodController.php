@@ -9,6 +9,7 @@ use App\Http\Requests\Food\{
 };
 
 use App\{
+    Allergy,
     Category,
     Food,
     Restaurant
@@ -22,6 +23,12 @@ class FoodController extends Controller
         if ($request->has('category')) {
             $category = Category::firstOrCreate(['name' => $request->input('category')]);
             $food->attachCategory($category);
+        }
+        if ($request->has('allergies')) {
+            foreach ($request->input('allergies') as $name) {
+                $allergy = Allergy::firstOrCreate(['name' => $name]);
+                $food->attachAllergy($allergy);
+            }
         }
         return $food;
     }

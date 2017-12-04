@@ -46,6 +46,13 @@ class Food extends Model
         }
     }
 
+    public function attachAllergy(Allergy $allergy)
+    {
+        if (!$this->allergies()->where('allergy_id', $allergy->id)->exists()) {
+            $this->allergies()->attach($allergy->id);
+        }
+    }
+
     public function getCategoriesAttribute()
     {
         return $this->categories()->get();
