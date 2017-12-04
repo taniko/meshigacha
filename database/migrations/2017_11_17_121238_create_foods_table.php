@@ -22,6 +22,7 @@ class CreateFoodsTable extends Migration
             $table->float('green')->unsigned();
             $table->float('yellow')->unsigned();
             $table->integer('restaurant_id')->unsigned();
+            $table->integer('price')->unsigned();
 
             $table->foreign('restaurant_id')
                 ->references('id')->on('restaurants')

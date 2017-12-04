@@ -4,16 +4,28 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\{
+    Food,
+    Restaurant
+};
 
 class FoodTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testExample()
+    use RefreshDatabase;
+
+    public function testCreate()
     {
-        $this->assertTrue(true);
+        $restaurant = factory(Restaurant::class)->create();
+        $data = factory(Food::class)->make()->toArray();
+        $count = Food::count();
+
+        $response = $this->api('POST', "restaurants/{$restaurant->id}/foods", $data);
+        $response->assertStatus(200);
+        $this->assertEquals($count + 1 , Food::count());
+        $this->assertEquals(1 , $restaurant->foods()->count());
+
+        $response = $this->api('GET', "restaurants/{$restaurant->id}/foods");
+        $response->assertStatus(200);
+        $this->assertEquals(1 , count($response->json()));
     }
 }

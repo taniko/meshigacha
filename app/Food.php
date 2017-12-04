@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Food extends Model
 {
+    protected $fillable = [
+        'name',
+        'calorie',
+        'red',
+        'green',
+        'yellow',
+        'price',
+    ];
+
     public function allergies()
     {
         return $this->belongsToMany('App\Allergy');
