@@ -39,6 +39,11 @@ class Food extends Model
         return $this->belongsToMany('App\Category');
     }
 
+    public function getCategoriesAttribute()
+    {
+        return $this->categories()->get();
+    }
+
     public function attachCategory(Category $category)
     {
         if (!$this->categories()->where('category_id', $category->id)->exists()) {
@@ -53,8 +58,10 @@ class Food extends Model
         }
     }
 
-    public function getCategoriesAttribute()
+    public function attachFoodstuff(Foodstuff $foodstuff)
     {
-        return $this->categories()->get();
+        if (!$this->foodstuffs()->where('foodstuff_id', $foodstuff->id)->exists()) {
+            $this->foodstuffs()->attach($foodstuff->id);
+        }
     }
 }

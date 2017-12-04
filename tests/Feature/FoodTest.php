@@ -48,4 +48,15 @@ class FoodTest extends TestCase
         $food = Food::orderBy('id', 'desc')->first();
         $this->assertEquals(3, $food->allergies()->count());
     }
+
+    public function testCreateWithFoodstuffs()
+    {
+        $restaurant = $this->createRestaurant();
+        $data = factory(Food::class)->make()->toArray();
+        $data['foodstuffs'] = $this->faker()->words(3);
+        $response = $this->api('POST', "restaurants/{$restaurant->id}/foods", $data);
+        $response->assertStatus(200);
+        $food = Food::orderBy('id', 'desc')->first();
+        $this->assertEquals(3, $food->foodstuffs()->count());
+    }
 }

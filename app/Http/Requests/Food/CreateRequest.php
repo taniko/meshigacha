@@ -31,6 +31,8 @@ class CreateRequest extends FormRequest
             'yellow'    => 'required|numeric',
             'price'     => 'required|integer',
             'category'  => 'string',
+            'allergies.*'   => 'string',
+            'foodstuffs.*'  => 'string',
         ];
     }
 }

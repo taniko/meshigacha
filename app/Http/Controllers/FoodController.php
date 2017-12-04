@@ -12,6 +12,7 @@ use App\{
     Allergy,
     Category,
     Food,
+    Foodstuff,
     Restaurant
 };
 
@@ -30,6 +31,15 @@ class FoodController extends Controller
                 $food->attachAllergy($allergy);
             }
         }
+
+        // attach foodstuffs
+        if ($request->has('foodstuffs')) {
+            foreach ($request->input('foodstuffs') as $name) {
+                $foodstuff = Foodstuff::firstOrCreate(['name' => $name]);
+                $food->attachFoodstuff($foodstuff);
+            }
+        }
+        
         return $food;
     }
 
