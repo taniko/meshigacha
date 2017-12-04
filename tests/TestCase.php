@@ -60,7 +60,7 @@ abstract class TestCase extends BaseTestCase
     public function createFood(Restaurant $restaurant = null, Category $category = null) : Food
     {
         if (is_null($restaurant)) {
-            $restaurant = $this->createRestaurant;
+            $restaurant = $this->createRestaurant();
         }
         $food = $restaurant->foods()->save(factory(Food::class)->make());
         if (!is_null($category)) {

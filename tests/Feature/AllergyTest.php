@@ -37,4 +37,19 @@ class AllergyTest extends TestCase
         $response->assertStatus(200);
         $this->assertEquals(1, count($response->json()));
     }
+
+    public function testFoods()
+    {
+        for ($i = 0; $i < 2; $i++) {
+            $allergy = factory(Allergy::class)->create();
+            for ($j = 0; $j < 5; $j++) {
+                $food = $this->createFood();
+                $food->attachAllergy($allergy);
+            }
+        }
+        $allergy = Allergy::get()->random();
+        $response = $this->api('GET', "allergies/{$allergy->id}/foods");
+        $response->assertStatus(200);
+        $this->assertEquals(5, count($response->json()));
+    }
 }

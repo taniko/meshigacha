@@ -10,6 +10,6 @@ class Allergy extends Model
 
     public function foods()
     {
-        $this->belongsToMany('App\Food');
+        return $this->belongsToMany('App\Food');
     }
 }
