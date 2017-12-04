@@ -47,3 +47,13 @@ Route::group(['prefix' => 'categories'], function () {
         Route::get('foods', 'CategoryController@foods');
     });
 });
+
+Route::group(['prefix' => 'allergies'], function () {
+    Route::post('/', 'AllergyController@create');
+    Route::get('/', 'AllergyController@search');
+    Route::group(['prefix' => '{allergy}'], function () {
+        Route::get('/', function (App\Allergy $allergy) {
+            return $allergy;
+        });
+    });
+});
