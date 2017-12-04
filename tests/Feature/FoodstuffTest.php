@@ -42,4 +42,19 @@ class FoodstuffTest extends TestCase
         $response->assertStatus(200);
         $this->assertEquals($foodstuff->name, ($response->json())['name']);
     }
+
+    public function testFoods()
+    {
+        for ($i = 0; $i < 2; $i++) {
+            $foodstuff = factory(Foodstuff::class)->create();
+            for ($j = 0; $j < 5; $j++) {
+                $food = $this->createFood();
+                $food->attachFoodstuff($foodstuff);
+            }
+        }
+        $allergy = Foodstuff::get()->random();
+        $response = $this->api('GET', "foodstuffs/{$foodstuff->id}/foods");
+        $response->assertStatus(200);
+        $this->assertEquals(5, count($response->json()));
+    }
 }

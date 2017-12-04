@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Allergy;
+use App\{
+    Allergy,
+    Foodstuff
+};
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -34,6 +37,7 @@ Route::group(['prefix' => 'foodstuffs'], function () {
     Route::get('/', 'FoodstuffController@search');
     Route::group(['prefix' => '{foodstuff}'], function () {
         Route::get('/', 'FoodstuffController@find');
+        Route::get('foods', 'FoodstuffController@foods');
     });
 });
 

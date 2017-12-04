@@ -29,4 +29,9 @@ class FoodstuffController extends Controller
     {
         return $foodstuff;
     }
+
+    public function foods(Request $request, Foodstuff $foodstuff)
+    {
+        return $foodstuff->foods()->get();
+    }
 }
