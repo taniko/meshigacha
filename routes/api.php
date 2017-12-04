@@ -36,3 +36,14 @@ Route::group(['prefix' => 'foodstuffs'], function () {
         Route::get('/', 'FoodstuffController@find');
     });
 });
+
+Route::group(['prefix' => 'categories'], function () {
+    Route::post('/', 'CategoryController@create');
+    Route::get('/', 'CategoryController@search');
+    Route::group(['prefix' => '{category}'], function () {
+        Route::get('/', function (App\Category $category) {
+            return $category;
+        });
+        Route::get('foods', 'CategoryController@foods');
+    });
+});

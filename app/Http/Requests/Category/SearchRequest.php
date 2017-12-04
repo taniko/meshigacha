@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Food;
+namespace App\Http\Requests\Category;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRequest extends FormRequest
+class SearchRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,7 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'      => 'required|string',
-            'calorie'   => 'required|numeric',
-            'red'       => 'required|numeric',
-            'green'     => 'required|numeric',
-            'yellow'    => 'required|numeric',
-            'price'     => 'required|integer',
-            'category'  => 'string',
+            //
         ];
     }
 }

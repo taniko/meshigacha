@@ -15,6 +15,10 @@ class Food extends Model
         'price',
     ];
 
+    protected $appends = [
+        'categories'
+    ];
+
     public function allergies()
     {
         return $this->belongsToMany('App\Allergy');
@@ -30,8 +34,20 @@ class Food extends Model
         return $this->belongsToMany('App\Foodstuff');
     }
 
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo('App\Category');
+        return $this->belongsToMany('App\Category');
+    }
+
+    public function attachCategory(Category $category)
+    {
+        if (!$this->categories()->where('category_id', $category->id)->exists()) {
+            $this->categories()->attach($category->id);
+        }
+    }
+
+    public function getCategoriesAttribute()
+    {
+        return $this->categories()->get();
     }
 }

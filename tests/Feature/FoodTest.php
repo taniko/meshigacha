@@ -28,4 +28,13 @@ class FoodTest extends TestCase
         $response->assertStatus(200);
         $this->assertEquals(1 , count($response->json()));
     }
+
+    public function testCreateWithCategory()
+    {
+        $restaurant = $this->createRestaurant();
+        $data = factory(Food::class)->make()->toArray();
+        $data['category'] = $this->faker()->words(1, true);
+        $response = $this->api('POST', "restaurants/{$restaurant->id}/foods", $data);
+        $response->assertStatus(200);
+    }
 }
