@@ -19,4 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'restaurants'], function () {
     Route::post('/', 'RestaurantController@create');
+    Route::get('/', 'RestaurantController@index');
+    Route::group(['prefix' => '{restaurant}'], function () {
+        Route::get('/', 'RestaurantController@find');
+    });
 });
