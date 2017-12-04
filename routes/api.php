@@ -24,3 +24,11 @@ Route::group(['prefix' => 'restaurants'], function () {
         Route::get('/', 'RestaurantController@find');
     });
 });
+
+Route::group(['prefix' => 'foodstuffs'], function () {
+    Route::post('/', 'FoodstuffController@create');
+    Route::get('/', 'FoodstuffController@search');
+    Route::group(['prefix' => '{foodstuff}'], function () {
+        Route::get('/', 'FoodstuffController@find');
+    });
+});
