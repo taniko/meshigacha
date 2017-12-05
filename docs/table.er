@@ -6,6 +6,7 @@ title {label: "Entity-Relationship diagram", size: "20"}
     address
     phone
     email
+    positions
 
 [foods]
     *id
@@ -16,6 +17,11 @@ title {label: "Entity-Relationship diagram", size: "20"}
     yellow
     restaurant_id
     price
+
+[photos]
+  *id
+  hash
+  food_id
 
 [allergies]
     *id
@@ -45,6 +51,7 @@ title {label: "Entity-Relationship diagram", size: "20"}
     foodstuff_id
 
 foods *--1 restaurants
+foods 1--* photos
 allergy_food *--* allergies
 allergy_food *--* foods
 category_food 1--* foods

@@ -15,13 +15,13 @@ class CreateRestaurantsTable extends Migration
     {
         Schema::create('restaurants', function (Blueprint $table) {
             $table->increments('id');
+            $table->timestamps();
             $table->string('name');
             $table->string('address');
             $table->string('email');
             $table->string('phone');
-            $table->timestamps();
+            $table->geometry('positions')->nullable();
         });
-        //2017_11_17_120317
     }
 
     /**
