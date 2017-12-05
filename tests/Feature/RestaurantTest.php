@@ -36,4 +36,20 @@ class RestaurantTest extends TestCase
         $response->assertStatus(200);
         $this->assertEquals($restaurant->name, ($response->json())['name']);
     }
+
+    public function testGacha()
+    {
+        $restaurant = $this->createRestaurant();
+        $foods = [];
+        for ($i = 0; $i < 10; $i++) {
+            $foods[] = $this->createFood($restaurant);
+        }
+        $response = $this->api('GET', "restaurants/{$restaurant->id}/gacha");
+        $response->assertStatus(200);
+        $data = $response->json();
+        $foods = array_filter($foods, function ($food) use ($data) {
+            return $food->id === $data['id'];
+        });
+        $this->assertEquals(1, count($foods));
+    }
 }

@@ -25,6 +25,7 @@ Route::group(['prefix' => 'restaurants'], function () {
     Route::get('/', 'RestaurantController@index');
     Route::group(['prefix' => '{restaurant}'], function () {
         Route::get('/', 'RestaurantController@find');
+        Route::get('gacha', 'RestaurantController@gacha');
         Route::group(['prefix' => 'foods'], function () {
             Route::post('/', 'FoodController@create');
             Route::get('/', 'FoodController@searchInRestaurant');

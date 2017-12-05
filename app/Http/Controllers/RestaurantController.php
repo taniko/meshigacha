@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\Restaurant\CreateRequest;
+use App\Http\Requests\Restaurant\{
+    CreateRequest,
+    GachaRequest
+};
 use App\Restaurant;
 
 class RestaurantController extends Controller
@@ -20,5 +23,10 @@ class RestaurantController extends Controller
     public function find(Request $request, Restaurant $restaurant)
     {
         return $restaurant;
+    }
+
+    public function gacha(GachaRequest $request, Restaurant $restaurant)
+    {
+        return $restaurant->gacha($request);
     }
 }
