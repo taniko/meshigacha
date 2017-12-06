@@ -27,6 +27,18 @@ class RestaurantController extends Controller
 
     public function gacha(GachaRequest $request, Restaurant $restaurant)
     {
-        return $restaurant->gacha($request);
+        $query = $restaurant->foods()
+            ->if($request->has('min_price'), function ($query) use ($request) {
+                return $query->where('price', '>=', $request->input('min_price'));
+            })->if($request->has('max_price'), function ($query) use ($request) {
+                return $query->where('price', '<=', $request->input('max_price'));
+            });
+        if ($request->has('uncontained')) {
+            $names = $request->input('uncontained');
+            $query = $query->whereDoesntHave('allergies', function ($q) use ($names) {
+                $q->whereIn('allergies.name', $names);
+            });
+        }
+        return $query->inRandomOrder()->first();
     }
 }

@@ -16,7 +16,7 @@ class Food extends Model
     ];
 
     protected $appends = [
-        'categories'
+        'categories', 'allergies'
     ];
 
     public function allergies()
@@ -42,6 +42,11 @@ class Food extends Model
     public function getCategoriesAttribute()
     {
         return $this->categories()->get();
+    }
+
+    public function getAllergiesAttribute()
+    {
+        return $this->allergies()->get();
     }
 
     public function attachCategory(Category $category)

@@ -13,9 +13,4 @@ class Restaurant extends Model
     {
         return $this->hasMany('App\Food');
     }
-
-    public function gacha(Request $request)
-    {
-        return $this->foods()->inRandomOrder()->first();
-    }
 }

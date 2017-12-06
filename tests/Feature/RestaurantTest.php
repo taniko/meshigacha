@@ -4,7 +4,10 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Restaurant;
+use App\{
+    Food,
+    Restaurant
+};
 
 class RestaurantTest extends TestCase
 {
@@ -51,5 +54,47 @@ class RestaurantTest extends TestCase
             return $food->id === $data['id'];
         });
         $this->assertEquals(1, count($foods));
+    }
+
+    public function testGachaPrice()
+    {
+        $restaurant = $this->createRestaurant();
+        for ($i = 0; $i < 2; $i++) {
+            $this->createFood($restaurant);
+        }
+        $foods = Food::orderBy('price', 'asc')->get();
+
+        // min_price
+        $response = $this->api('GET', "restaurants/{$restaurant->id}/gacha", [
+            'min_price' => $foods[0]->price + 1,
+        ]);
+        $response->assertStatus(200);
+        $data = $response->json();
+        $this->assertEquals($foods[1]->id, ($response->json())['id']);
+
+        // max_price
+        $response = $this->api('GET', "restaurants/{$restaurant->id}/gacha", [
+            'max_price' => $foods[1]->price - 1,
+        ]);
+        $response->assertStatus(200);
+        $data = $response->json();
+        $this->assertEquals($foods[0]->id, ($response->json())['id']);
+    }
+
+    public function testGachaAllergy()
+    {
+        $restaurant = $this->createRestaurant();
+        for ($i = 0; $i < 2; $i++) {
+            $this->createFood($restaurant);
+        }
+        $foods   = Food::get();
+        $allergy = $this->createAllergy();
+        $foods[0]->attachAllergy($allergy);
+        $response = $this->api('GET', "restaurants/{$restaurant->id}/gacha", [
+            'uncontained' => [$allergy->name],
+        ]);
+        $response->assertStatus(200);
+        $data = $response->json();
+        $this->assertEquals($foods[1]->id, ($response->json())['id']);
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Faker\Factory;
 use App\User;
 use App\{
+    Allergy,
     Category,
     Food,
     Restaurant
@@ -55,6 +56,11 @@ abstract class TestCase extends BaseTestCase
     public function createCategory() : Category
     {
         return factory(Category::class)->create();
+    }
+
+    public function createAllergy() : Allergy
+    {
+        return factory(Allergy::class)->create();
     }
 
     public function createFood(Restaurant $restaurant = null, Category $category = null) : Food

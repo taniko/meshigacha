@@ -24,7 +24,9 @@ class GachaRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'max_price'     => 'integer',
+            'min_price'     => 'integer',
+            'uncontained'   => 'array',
         ];
     }
 }
