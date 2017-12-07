@@ -33,6 +33,8 @@ class CreateRequest extends FormRequest
             'category'  => 'string',
             'allergies.*'   => 'string',
             'foodstuffs.*'  => 'string',
+            'photos'    => 'required|min:1|array',
+            'photos.*'  => 'image',
         ];
     }
 }

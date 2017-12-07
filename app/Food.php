@@ -16,8 +16,13 @@ class Food extends Model
     ];
 
     protected $appends = [
-        'categories', 'allergies'
+        'categories', 'allergies', 'photos'
     ];
+
+    public function photos()
+    {
+        return $this->hasMany('App\Photo');
+    }
 
     public function allergies()
     {
@@ -47,6 +52,13 @@ class Food extends Model
     public function getAllergiesAttribute()
     {
         return $this->allergies()->get();
+    }
+
+    public function getPhotosAttribute()
+    {
+        return $this->photos()->pluck('filename')->map(function ($filename) {
+            return asset("photos/{$filename}");
+        });
     }
 
     public function attachCategory(Category $category)

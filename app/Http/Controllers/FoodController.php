@@ -13,7 +13,8 @@ use App\{
     Category,
     Food,
     Foodstuff,
-    Restaurant
+    Restaurant,
+    Photo
 };
 
 class FoodController extends Controller
@@ -39,7 +40,17 @@ class FoodController extends Controller
                 $food->attachFoodstuff($foodstuff);
             }
         }
-        
+
+        // save photos
+        foreach ($request->file('photos') as $file) {
+            do {
+                $hash = str_random(16);
+                $filename = "{$hash}.{$file->extension()}";
+            } while (Photo::where('filename', $filename)->exists());
+            $file->storeAs('public/photos', $filename);
+            $food->photos()->save(new Photo(['filename' => $filename]));
+
+        }
         return $food;
     }
 
