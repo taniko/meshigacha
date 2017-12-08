@@ -54,8 +54,13 @@ class FoodController extends Controller
         return $food;
     }
 
-    public function searchInRestaurant(SearchRequest $request, Restaurant $restaurant)
+    public function search(SearchRequest $request, Restaurant $restaurant = null)
     {
-        return $restaurant->foods()->get();
+        if (is_null($restaurant)) {
+            $query = Food::query();
+        } else {
+            $query = $restaurant->foods();
+        }
+        return $query->get();
     }
 }

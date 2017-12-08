@@ -19,6 +19,19 @@ class Food extends Model
         'categories', 'allergies', 'photos'
     ];
 
+    protected $visible = [
+        'id',
+        'name',
+        'calorie',
+        'red',
+        'green',
+        'yellow',
+        'price',
+        'categories',
+        'allergies',
+        'photos',
+    ];
+
     public function photos()
     {
         return $this->hasMany('App\Photo');

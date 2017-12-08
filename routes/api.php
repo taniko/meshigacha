@@ -28,7 +28,7 @@ Route::group(['prefix' => 'restaurants'], function () {
         Route::get('gacha', 'RestaurantController@gacha');
         Route::group(['prefix' => 'foods'], function () {
             Route::post('/', 'FoodController@create');
-            Route::get('/', 'FoodController@searchInRestaurant');
+            Route::get('/', 'FoodController@search');
         });
     });
 });
@@ -64,4 +64,8 @@ Route::group(['prefix' => 'allergies'], function () {
             return $allergy->foods()->get();
         });
     });
+});
+
+Route::group(['prefix' => 'foods'], function () {
+    Route::get('/', 'FoodController@search');
 });
