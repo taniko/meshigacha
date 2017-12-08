@@ -9,6 +9,14 @@ class Restaurant extends Model
 {
     protected $fillable = ['name', 'address', 'phone', 'email'];
 
+    protected $visible = [
+        'id',
+        'name',
+        'address',
+        'phone',
+        'email',
+    ];
+
     public function foods()
     {
         return $this->hasMany('App\Food');
