@@ -45,6 +45,29 @@ class FoodTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
+    public function testCreateByBase64Photo()
+    {
+        $restaurant = factory(Restaurant::class)->create();
+        $data = factory(Food::class)->make()->toArray();
+        $file = UploadedFile::fake()->image('dummy.png', 100, 100);
+        $data['base64_photos'][] = base64_encode(file_get_contents($file->path()));
+        $count = Food::count();
+
+        $response = $this->api('POST', "restaurants/{$restaurant->id}/foods", $data);
+        $response->assertStatus(200);
+        $data = $response->json();
+        $this->assertEquals($count + 1 , Food::count());
+        $this->assertEquals(1 , $restaurant->foods()->count());
+        $this->assertEquals(1, (Food::find($data['id']))->photos()->count());
+
+        $response = $this->api('GET', "restaurants/{$restaurant->id}/foods");
+        $response->assertStatus(200);
+        $this->assertEquals(1 , count($response->json()));
+
+        $response = $this->call('GET', "");
+        $this->assertEquals(200, $response->status());
+    }
+
     public function testCreateWithCategory()
     {
         $restaurant = $this->createRestaurant();

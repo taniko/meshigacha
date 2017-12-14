@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
         Builder::macro('if', function (bool $condition, callable $func) {
             return $condition ? $func($this) : $this;
         });
+        \Validator::extend('base64', function ($attribute, $value, $parameters, $validator) {
+            return preg_match('/^[a-zA-Z0-9\/+]+=*$/', $value) === 1;
+        });
     }
 
     /**

@@ -35,8 +35,10 @@ class CreateRequest extends FormRequest
             'allergies.*'   => 'string',
             'foodstuffs'    => 'array',
             'foodstuffs.*'  => 'string',
-            'photos'    => 'required|min:1|array',
-            'photos.*'  => 'image',
+            'photos'        => 'required_without_all:base64_photos|array',
+            'photos.*'      => 'image',
+            'base64_photos' => 'required_without_all:photos||array',
+            'base64_photos.*'   => 'base64',
         ];
     }
 }
