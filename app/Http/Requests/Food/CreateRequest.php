@@ -37,7 +37,7 @@ class CreateRequest extends FormRequest
             'foodstuffs.*'  => 'string',
             'photos'        => 'required_without_all:base64_photos|array',
             'photos.*'      => 'image',
-            'base64_photos' => 'required_without_all:photos||array',
+            'base64_photos' => 'required_without_all:photos|array',
             'base64_photos.*'   => 'base64',
         ];
     }
