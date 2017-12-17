@@ -4,12 +4,14 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Faker\Factory;
+use Illuminate\Http\UploadedFile;
 use App\User;
 use App\{
     Allergy,
     Category,
     Food,
-    Restaurant
+    Restaurant,
+    Photo
 };
 
 
@@ -72,6 +74,13 @@ abstract class TestCase extends BaseTestCase
         if (!is_null($category)) {
             $food->attachCategory($category);
         }
+        $file = UploadedFile::fake()->image('dummy.jpg', 100, 100);
+        do {
+            $hash = str_random(16);
+            $filename = "{$hash}.{$file->extension()}";
+        } while (Photo::where('filename', $filename)->exists());
+        $file->storeAs('public/photos', $filename);
+        $food->photos()->save(new Photo(['filename' => $filename]));
         return $food;
     }
 }
