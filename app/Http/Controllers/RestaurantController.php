@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\Restaurant\{
     CreateRequest,
-    GachaRequest
+    GachaRequest,
+    UpdateRequest
 };
 use App\Restaurant;
 
@@ -40,5 +41,11 @@ class RestaurantController extends Controller
             });
         }
         return $query->inRandomOrder()->first();
+    }
+
+    public function update(UpdateRequest $request, Restaurant $restaurant)
+    {
+        $restaurant->update($request->all());
+        return $restaurant;
     }
 }

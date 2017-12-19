@@ -97,4 +97,14 @@ class RestaurantTest extends TestCase
         $data = $response->json();
         $this->assertEquals($foods[1]->id, ($response->json())['id']);
     }
+
+    public function testUpdate()
+    {
+        $restaurant = $this->createRestaurant();
+        $data = ['name' => 'foobar'];
+        $response = $this->api('PATCH', "restaurants/{$restaurant->id}", $data);
+        $response->assertStatus(200);
+        $restaurant = Restaurant::find($restaurant->id);
+        $this->assertEquals($data['name'], $restaurant->name);
+    }
 }

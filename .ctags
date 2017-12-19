@@ -1,0 +1,14 @@
+--recurse=yes
+--languages=PHP
+--exclude=vendor
+--exclude=database
+--exclude=storage
+--exclude=dockerfiles
+--exclude=routes
+--exclude=resources
+--exclude=public
+--exclude=docs
+--exclude=log
+--exclude=server.php
+--exclude=bootstrap
+--exclude=config
