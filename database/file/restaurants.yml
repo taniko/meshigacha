@@ -3,9 +3,12 @@
   address: 滋賀県草津市野路東１丁目１−１−１
   phone: 077-000-0000
   email: test@example.com
-
+  lat: 34.982032
+  lng: 135.9629767
 -
   name: リンクスクエア
   address: 滋賀県草津市野路東１丁目１−１−１
   phone: 077-000-0000
   email: test@example.com
+  lat: 34.9801492
+  lng: 135.9640188

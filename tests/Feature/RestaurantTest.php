@@ -107,4 +107,12 @@ class RestaurantTest extends TestCase
         $restaurant = Restaurant::find($restaurant->id);
         $this->assertEquals($data['name'], $restaurant->name);
     }
+
+    public function testConvertAddress()
+    {
+        $address = '滋賀県草津市野路東１丁目１−１';
+        $geo = Restaurant::a2p($address);
+        $this->assertInternalType('double', $geo['lat']);
+        $this->assertInternalType('double', $geo['lng']);
+    }
 }

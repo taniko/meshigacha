@@ -55,4 +55,26 @@ class Restaurant extends Model
             DB::raw("astext({$this->geofields}) as {$this->geofields}")
         );
     }
+
+    public static function a2p(string $address) : array
+    {
+        $client = new Client();
+        try {
+            $response = $client->request('GET', 'https://maps.googleapis.com/maps/api/geocode/json', [
+                'query' => [
+                    'address' => $address,
+                    'key'     => getenv('GOOGLE_MAPS_KEY'),
+                ]
+            ]);
+            $data = json_decode($response->getBody(), true);
+            $result = [
+                'lat'   => $data['results'][0]['geometry']['location']['lat'],
+                'lng'   => $data['results'][0]['geometry']['location']['lng'],
+            ];
+        } catch (\Exception $e) {
+            logger()->error('failed get geometry', ['address' => $address]);
+            $result = ['lat' => null, 'lng' => null];
+        }
+        return $result;
+    }
 }
