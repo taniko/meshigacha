@@ -10,6 +10,7 @@ use App\{
     Allergy,
     Category,
     Food,
+    Foodstuff,
     Restaurant,
     Photo
 };
@@ -63,6 +64,11 @@ abstract class TestCase extends BaseTestCase
     public function createAllergy() : Allergy
     {
         return factory(Allergy::class)->create();
+    }
+
+    public function createFoodstuff() : Foodstuff
+    {
+        return factory(Foodstuff::class)->create();
     }
 
     public function createFood(Restaurant $restaurant = null, Category $category = null) : Food

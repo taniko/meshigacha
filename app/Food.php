@@ -16,7 +16,7 @@ class Food extends Model
     ];
 
     protected $appends = [
-        'categories', 'allergies', 'photos'
+        'categories', 'allergies', 'photos', 'foodstuffs'
     ];
 
     protected $visible = [
@@ -30,6 +30,7 @@ class Food extends Model
         'categories',
         'allergies',
         'photos',
+        'foodstuffs',
     ];
 
     public function photos()
@@ -65,6 +66,11 @@ class Food extends Model
     public function getAllergiesAttribute()
     {
         return $this->allergies()->get();
+    }
+
+    public function getFoodstuffsAttribute()
+    {
+        return $this->foodstuffs()->get();
     }
 
     public function getPhotosAttribute()

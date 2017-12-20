@@ -40,6 +40,18 @@ class RestaurantController extends Controller
                 $q->whereIn('allergies.name', $names);
             });
         }
+        if ($request->has('categories')) {
+            $names = $request->input('categories');
+            $query = $query->whereHas('categories', function ($q) use ($names) {
+                $q->whereIn('categories.name', $names);
+            });
+        }
+        if ($request->has('foodstuffs')) {
+            $names = $request->input('foodstuffs');
+            $query = $query->whereHas('foodstuffs', function ($q) use ($names) {
+                $q->whereIn('foodstuffs.name', $names);
+            });
+        }
         return $query->inRandomOrder()->first();
     }
 

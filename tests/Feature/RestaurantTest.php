@@ -98,6 +98,44 @@ class RestaurantTest extends TestCase
         $this->assertEquals($foods[1]->id, ($response->json())['id']);
     }
 
+    public function testGachaCategory()
+    {
+        $restaurant = $this->createRestaurant();
+        for ($i = 0; $i < 2; $i++) {
+            $this->createFood($restaurant);
+        }
+        $foods    = Food::get();
+        $category = $this->createCategory();
+        $foods[0]->attachCategory($category);
+        $response = $this->api('GET', "restaurants/{$restaurant->id}/gacha", [
+            'categories' => [$category->name],
+        ]);
+        $response->assertStatus(200);
+        $data = $response->json();
+        $this->assertEquals($foods[0]->id, $data['id']);
+        $this->assertEquals($category->name, $data['categories'][0]['name']);
+    }
+
+    public function testGachaFoodstuff()
+    {
+        $restaurant = $this->createRestaurant();
+        for ($i = 0; $i < 2; $i++) {
+            $this->createFood($restaurant);
+        }
+        $food      = Food::all()->random();
+        $foodstuff = $this->createFoodstuff();
+        $food->attachFoodstuff($foodstuff);
+        $response = $this->api('GET', "restaurants/{$restaurant->id}/gacha", [
+            'foodstuffs' => [$foodstuff->name],
+        ]);
+        $response->assertStatus(200);
+        $data = $response->json();
+        $this->assertEquals($food->id, $data['id']);
+        $this->assertEquals($foodstuff->name, $data['foodstuffs'][0]['name']);
+    }
+
+
+
     public function testUpdate()
     {
         $restaurant = $this->createRestaurant();

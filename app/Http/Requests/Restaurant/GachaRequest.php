@@ -27,6 +27,10 @@ class GachaRequest extends FormRequest
             'max_price'     => 'integer',
             'min_price'     => 'integer',
             'uncontained'   => 'array',
+            'categories'    => 'array',
+            'categories.*'  => 'string',
+            'foodstuffs'    => 'array',
+            'foodstuffs.*'  => 'string',
         ];
     }
 }
