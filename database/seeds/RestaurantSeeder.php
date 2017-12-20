@@ -15,12 +15,19 @@ class RestaurantSeeder extends Seeder
     {
         $file = database_path('file/restaurants.yml');
         foreach (Yaml::parse(file_get_contents($file)) as $data) {
-            Restaurant::firstOrCreate([
+            $restaurant = Restaurant::firstOrCreate([
                 'name'      => $data['name'],
                 'address'   => $data['address'],
                 'phone'     => $data['phone'],
                 'email'     => $data['email'],
             ]);
+            if (is_null($restaurant->positions['latitude']) || is_null($restaurant->positions['longitude'])) {
+                $restaurant->positions = [
+                    'lat' => $data['lat'],
+                    'lng' => $data['lng'],
+                ];
+                $restaurant->save();
+            }
         }
     }
 }
