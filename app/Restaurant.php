@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class Restaurant extends Model
 {
@@ -19,7 +19,8 @@ class Restaurant extends Model
         'address',
         'phone',
         'email',
-        'positions'
+        'positions',
+        'distance',
     ];
 
     public function foods()
@@ -76,5 +77,12 @@ class Restaurant extends Model
             $result = ['lat' => null, 'lng' => null];
         }
         return $result;
+    }
+
+    public function scopeWithDistance($query, float $latitude, float $longitude)
+    {
+        return $query
+            ->addSelect(DB::raw('ST_Distance(POINT(?, ?), `positions`) * 111 *1000 as `distance`'))
+            ->setBindings([$latitude, $longitude]);
     }
 }
