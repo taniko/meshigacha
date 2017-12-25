@@ -27,13 +27,17 @@ class RestaurantController extends Controller
     {
         $query = Restaurant::query();
         if ($request->has('lat') && $request->has('lng')) {
-            $query->withDistance($request->input('lat'), $request->input('lng'));
+            $query->withDistance($request->input('lat'), $request->input('lng'))->orderBy('distance', 'desc');
         }
         $restaurants = $query->get();
         if ($request->has('lat') && $request->has('lng')) {
-            $restaurants = $restaurants->where('distance', '<=', $request->input('distance', 1000));
+            $restaurants = $restaurants
+                ->where('distance', '<=', $request->input('distance', 1000))
+                ->filter(function ($restaurant) {
+                    return !is_null($restaurant->distance);
+                });
         }
-        return $restaurants;
+        return $restaurants->values();
     }
 
     public function find(Request $request, Restaurant $restaurant)
