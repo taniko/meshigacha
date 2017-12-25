@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Restaurant\{
     CreateRequest,
     GachaRequest,
-    UpdateRequest
+    UpdateRequest,
+    SearchRequest
 };
 use App\Restaurant;
 
@@ -16,9 +17,17 @@ class RestaurantController extends Controller
         return Restaurant::create($request->input());
     }
 
-    public function index(Request $request)
+    public function index(SearchRequest $request)
     {
-        return Restaurant::get();
+        $query = Restaurant::query();
+        if($request->has('lat') && $request->has('lng')) {
+            $query->withDistance($request->input('lat'), $request->input('lng'));
+        }
+        $restaurants = $query->get();
+        if ($request->has('lat') && $request->has('lng')) {
+            $restaurants = $restaurants->where('distance', '<=', $request->input('distance', 1000));
+        }
+        return $restaurants;
     }
 
     public function find(Request $request, Restaurant $restaurant)

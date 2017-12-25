@@ -32,6 +32,17 @@ class RestaurantTest extends TestCase
         $this->assertEquals(10, count($response->json()));
     }
 
+    public function testSearchRestaurant()
+    {
+        $this->artisan('db:seed');
+        $response = $this->api('GET', 'restaurants', [
+            'lat' => 34.979482,
+            'lng' => 135.964019,
+            'distance' => 100,
+        ]);
+        $this->assertEquals(1, count($response->json()));
+    }
+
     public function testFind()
     {
         $restaurant = factory(Restaurant::class)->create();
