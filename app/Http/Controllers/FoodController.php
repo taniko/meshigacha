@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Requests\Food\{
     CreateRequest,
@@ -21,27 +22,51 @@ class FoodController extends Controller
 {
     public function create(CreateRequest $request, Restaurant $restaurant)
     {
-        $food = $restaurant->foods()->save(new Food($request->input()));
-        if ($request->has('category')) {
-            $category = Category::firstOrCreate(['name' => $request->input('category')]);
-            $food->attachCategory($category);
-        }
-        if ($request->has('allergies')) {
-            foreach ($request->input('allergies') as $name) {
-                $allergy = Allergy::firstOrCreate(['name' => $name]);
-                $food->attachAllergy($allergy);
+        $food = DB::transaction(function () use ($request, $restaurant) {
+            $food = $restaurant->foods()->save(new Food($request->input()));
+            if ($request->has('category')) {
+                $category = Category::firstOrCreate(['name' => $request->input('category')]);
+                $food->attachCategory($category);
             }
-        }
-
-        // attach foodstuffs
-        if ($request->has('foodstuffs')) {
-            foreach ($request->input('foodstuffs') as $name) {
-                $foodstuff = Foodstuff::firstOrCreate(['name' => $name]);
-                $food->attachFoodstuff($foodstuff);
+            if ($request->has('allergies')) {
+                foreach ($request->input('allergies') as $name) {
+                    $allergy = Allergy::firstOrCreate(['name' => $name]);
+                    $food->attachAllergy($allergy);
+                }
             }
-        }
 
-        // save photos
+            // attach foodstuffs
+            if ($request->has('foodstuffs')) {
+                foreach ($request->input('foodstuffs') as $name) {
+                    $foodstuff = Foodstuff::firstOrCreate(['name' => $name]);
+                    $food->attachFoodstuff($foodstuff);
+                }
+            }
+
+            $this->savePhotos($food, $request);
+            return $food;
+        });
+        return $food;
+    }
+
+    public function search(SearchRequest $request, Restaurant $restaurant = null)
+    {
+        if (is_null($restaurant)) {
+            $query = Food::query();
+        } else {
+            $query = $restaurant->foods();
+        }
+        return $query->get();
+    }
+
+    /**
+     * save new photos for food
+     * @param  App\Food                             $food    [description]
+     * @param  App\Http\Requests\Food\CreateRequest $request [description]
+     * @throws Symfony\Component\HttpKernel\Exception\HttpException
+     */
+    private function savePhotos(Food $food, CreateRequest $request)
+    {
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $file) {
                 do {
@@ -50,7 +75,6 @@ class FoodController extends Controller
                 } while (Photo::where('filename', $filename)->exists());
                 $file->storeAs('public/photos', $filename);
                 $food->photos()->save(new Photo(['filename' => $filename]));
-
             }
         } elseif ($request->has('base64_photos')) {
             $f = finfo_open();
@@ -81,16 +105,5 @@ class FoodController extends Controller
             logger()->error('Photos do not exist', $request->all());
             abort(422);
         }
-        return $food;
-    }
-
-    public function search(SearchRequest $request, Restaurant $restaurant = null)
-    {
-        if (is_null($restaurant)) {
-            $query = Food::query();
-        } else {
-            $query = $restaurant->foods();
-        }
-        return $query->get();
     }
 }
