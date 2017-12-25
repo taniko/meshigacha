@@ -13,14 +13,20 @@ use App\Restaurant;
 
 class RestaurantController extends Controller
 {
-    public function create(CreateRequest $request) {
-        return Restaurant::create($request->input());
+    public function create(CreateRequest $request)
+    {
+        $restaurant = Restaurant::create($request->input());
+        if (!is_null(getenv('GOOGLE_MAPS_KEY')) && (env('APP_ENV') === 'production' || env('GOOGLE_MAPS_API_TEST'))) {
+            $restaurant->positions = Restaurant::a2p($restaurant->address);
+            $restaurant->save();
+        }
+        return $restaurant;
     }
 
     public function index(SearchRequest $request)
     {
         $query = Restaurant::query();
-        if($request->has('lat') && $request->has('lng')) {
+        if ($request->has('lat') && $request->has('lng')) {
             $query->withDistance($request->input('lat'), $request->input('lng'));
         }
         $restaurants = $query->get();

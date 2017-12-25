@@ -16,10 +16,16 @@ class RestaurantTest extends TestCase
     public function testCreate()
     {
         $data = factory(Restaurant::class)->make()->toArray();
+        $data['address'] = '滋賀県草津市野路東１丁目１−１';
         $count = Restaurant::count();
         $response = $this->api('POST', 'restaurants', $data);
         $response->assertStatus(200);
         $this->assertEquals($count + 1 , Restaurant::count());
+        $restaurant = $response->json();
+        if (env('GOOGLE_MAPS_API_TEST', false) === true) {
+            $this->assertInternalType('float', $restaurant['positions']['latitude']);
+            $this->assertInternalType('float', $restaurant['positions']['longitude']);
+        }
     }
 
     public function testIndex()
@@ -159,9 +165,13 @@ class RestaurantTest extends TestCase
 
     public function testConvertAddress()
     {
-        $address = '滋賀県草津市野路東１丁目１−１';
-        $geo = Restaurant::a2p($address);
-        $this->assertInternalType('double', $geo['lat']);
-        $this->assertInternalType('double', $geo['lng']);
+        if (getenv('GOOGLE_MAPS_API_TEST') == true) {
+            $address = '滋賀県草津市野路東１丁目１−１';
+            $geo = Restaurant::a2p($address);
+            $this->assertInternalType('float', $geo['lat']);
+            $this->assertInternalType('float', $geo['lng']);
+        } else {
+            $this->assertTrue(true);
+        }
     }
 }

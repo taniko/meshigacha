@@ -37,8 +37,8 @@ class Restaurant extends Model
     {
         if (isset($value) && preg_match('/POINT\(([0-9.]+)\s([0-9.]+)\)/i', $value, $m) == 1) {
             $result = [
-                'latitude'  => $m[1],
-                'longitude' => $m[2],
+                'latitude'  => floatval($m[1]),
+                'longitude' => floatval($m[2]),
             ];
         } else {
             $result = [
