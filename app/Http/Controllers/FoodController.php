@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Requests\Food\{
     CreateRequest,
-    SearchRequest
+    SearchRequest,
+    GachaRequest
 };
 use Storage;
 use App\{
@@ -105,5 +106,46 @@ class FoodController extends Controller
             logger()->error('Photos do not exist', $request->all());
             abort(422);
         }
+    }
+
+    /**
+     * gacha
+     * @param  App\Http\Requests\Food\GachaRequest $request
+     * @return App\Food
+     */
+    public function gacha(GachaRequest $request)
+    {
+        $ids = Restaurant::withDistance($request->input('lat'), $request->input('lng'))
+            ->orderBy('distance', 'desc')
+            ->get()
+            ->where('distance', '<=', $request->input('distance', 1000))
+            ->filter(function ($restaurant) {
+                return !is_null($restaurant->distance);
+            })->pluck('id');
+        $query = Food::whereIn('restaurant_id', $ids)
+            ->if($request->has('min_price'), function ($query) use ($request) {
+                return $query->where('price', '>=', $request->input('min_price'));
+            })->if($request->has('max_price'), function ($query) use ($request) {
+                return $query->where('price', '<=', $request->input('max_price'));
+            });
+        if ($request->has('uncontained')) {
+            $names = $request->input('uncontained');
+            $query = $query->whereDoesntHave('allergies', function ($q) use ($names) {
+                $q->whereIn('allergies.name', $names);
+            });
+        }
+        if ($request->has('categories')) {
+            $names = $request->input('categories');
+            $query = $query->whereHas('categories', function ($q) use ($names) {
+                $q->whereIn('categories.name', $names);
+            });
+        }
+        if ($request->has('foodstuffs')) {
+            $names = $request->input('foodstuffs');
+            $query = $query->whereHas('foodstuffs', function ($q) use ($names) {
+                $q->whereIn('foodstuffs.name', $names);
+            });
+        }
+        return $query->with('restaurant')->inRandomOrder()->first();
     }
 }

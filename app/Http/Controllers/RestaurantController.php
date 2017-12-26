@@ -71,7 +71,7 @@ class RestaurantController extends Controller
                 $q->whereIn('foodstuffs.name', $names);
             });
         }
-        return $query->inRandomOrder()->first();
+        return $query->inRandomOrder()->with('restaurant')->first();
     }
 
     public function update(UpdateRequest $request, Restaurant $restaurant)

@@ -31,6 +31,7 @@ class Food extends Model
         'allergies',
         'photos',
         'foodstuffs',
+        'restaurant',
     ];
 
     public function photos()

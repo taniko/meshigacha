@@ -69,4 +69,5 @@ Route::group(['prefix' => 'allergies'], function () {
 
 Route::group(['prefix' => 'foods'], function () {
     Route::get('/', 'FoodController@search');
+    Route::get('gacha', 'FoodController@gacha');
 });

@@ -8,7 +8,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use App\{
     Food,
-    Restaurant
+    Restaurant,
+    Allergy
 };
 
 class FoodTest extends TestCase
@@ -103,5 +104,34 @@ class FoodTest extends TestCase
         $response->assertStatus(200);
         $food = Food::orderBy('id', 'desc')->first();
         $this->assertEquals(3, $food->foodstuffs()->count());
+    }
+
+    public function testGacha()
+    {
+        $this->artisan('db:seed');
+        $restaurants = Restaurant::get();
+        $allergies = Allergy::get();
+        $restaurants->each(function($restaurant, $key) use ($allergies) {
+            $food = $this->createFood($restaurant);
+            $food->attachAllergy($allergies[$key]);
+        });
+        $response = $this->api('GET', 'foods/gacha', [
+            'lat' => 34.979482,
+            'lng' => 135.964019,
+            'distance' => 100,
+        ]);
+        $response->assertStatus(200);
+        $data = $response->json();
+        $this->assertEquals('リンクスクエア', $data['restaurant']['name']);
+
+        $response = $this->api('GET', 'foods/gacha', [
+            'lat'           => 34.979482,
+            'lng'           => 135.964019,
+            'distance'      => 1000,
+            'uncontained'   => [$data['allergies'][0]['name']],
+        ]);
+        $response->assertStatus(200);
+        $data = $response->json();
+        $this->assertEquals('ユニオンスクエア', $data['restaurant']['name']);
     }
 }
