@@ -14,6 +14,9 @@ class AllergySeeder extends Seeder
     {
         $file = database_path('file/allergies.txt');
         foreach (explode("\n", file_get_contents($file)) as $name) {
+            if (mb_strlen($name) === 0) {
+                continue;
+            }
             Allergy::firstOrCreate(['name' => $name]);
         }
     }
