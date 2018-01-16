@@ -20,7 +20,7 @@ title {label: "Entity-Relationship diagram", size: "20"}
 
 [photos]
   *id
-  hash
+  filename
   food_id
 
 [allergies]
